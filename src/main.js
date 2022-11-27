@@ -1,5 +1,23 @@
-import { createApp } from "vue";
+/* eslint-disable */ 
+import { createApp, provide, h } from "vue";
+import { DefaultApolloClient } from "@vue/apollo-composable";
+import { ApolloClient, InMemoryCache } from "@apollo/client/core";
 import App from "./App.vue";
 import router from "./router";
 
-createApp(App).use(router).mount("#app");
+const cache = new InMemoryCache();
+
+const apolloClient = new ApolloClient({
+  cache,
+  uri: "http://localhost:5000/graphql",
+});
+
+const app = createApp({
+  setup () {
+    provide(DefaultApolloClient, apolloClient)
+  },
+
+  render: () => h(App),
+});
+
+app.use(router).mount("#app");
